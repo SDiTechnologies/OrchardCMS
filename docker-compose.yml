@@ -1,0 +1,55 @@
+version: '3'
+services:
+
+  db:
+    image: postgres:alpine
+    container_name: postgresql
+    restart: always
+    volumes:
+      - ./data/pg:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: OrchardCMS
+      POSTGRES_USER: YourPostgresAdminUser
+      POSTGRES_PASSWORD: SuperSecretPassword!
+
+  # dbwebapp:
+  #   image: dpage/pgadmin4
+  #   container_name: pgapp
+  #   restart: always
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - ./data/pgadmin:/var/lib/pgadmin
+  #   ports:
+  #     - "80:9876"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: Supersecureroot!
+  #     PGADMIN_LISTEN_PORT: 80
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    expose:
+      - 6379
+
+  app:
+    image: orchardproject/orchardcore-cms-linux
+    container_name: orchardcms
+    volumes:
+      - ./orchardstore:/app/App_Data
+    # links:
+    #   - db:db
+    #   - redis:redis
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 5003:80
+
+# volumes:
+#   pg-data:
+#   orchardstore:
