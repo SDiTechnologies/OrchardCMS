@@ -1,18 +1,19 @@
 version: '3'
 services:
 
-  db:
-    image: postgres:alpine
-    container_name: postgresql
-    restart: always
-    volumes:
-      - ./data/pg:/var/lib/postgresql/data
-    expose:
-      - "5432"
-    environment:
-      POSTGRES_DB: OrchardCMS
-      POSTGRES_USER: YourPostgresAdminUser
-      POSTGRES_PASSWORD: SuperSecretPassword!
+  ## migrate to seperate docker-compose.yml file
+  # db:
+  #   image: postgres:alpine
+  #   container_name: postgresql
+  #   restart: always
+  #   volumes:
+  #     - ./data/pg:/var/lib/postgresql/data
+  #   expose:
+  #     - "5432"
+  #   environment:
+  #     POSTGRES_DB: OrchardCMS
+  #     POSTGRES_USER: YourPostgresAdminUser
+  #     POSTGRES_PASSWORD: SuperSecretPassword!
 
   # dbwebapp:
   #   image: dpage/pgadmin4
@@ -33,8 +34,10 @@ services:
     image: redis:alpine
     container_name: redis
     restart: always
-    expose:
-      - 6379
+    ports:
+      - 6379:6379
+    # expose:
+    #   - 6379
 
   app:
     image: orchardproject/orchardcore-cms-linux
@@ -45,7 +48,7 @@ services:
     #   - db:db
     #   - redis:redis
     depends_on:
-      - db
+      # - db
       - redis
     ports:
       - 5003:80
